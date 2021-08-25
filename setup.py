@@ -1,6 +1,5 @@
 from setuptools import setup, find_packages
 
-
 setup(
     name="rd_filters",
     version="0.1",

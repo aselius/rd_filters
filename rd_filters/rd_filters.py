@@ -12,6 +12,8 @@ import os
 import json
 from docopt import docopt
 import pkg_resources
+import importlib.resources as pkg_resources
+from . import data
 
 cmd_str = """Usage:
 rd_filters filter --in INPUT_FILE --prefix PREFIX [--rules RULES_FILE_NAME] [--alerts ALERT_FILE_NAME][--np NUM_CORES]
@@ -107,8 +109,11 @@ def get_config_file(file_name, environment_variable):
 
 
 class RDFilters:
-    def __init__(self, rules_file_name):
-        good_name = get_config_file(rules_file_name, "FILTER_RULES_DIR")
+    def __init__(self, rules_file_name=""):
+        if rules_file_name:
+            good_name = get_config_file(rules_file_name, "FILTER_RULES_DIR")
+        else:
+            good_name = pkg_resources.open_text(data, 'alert_collection.csv')
         self.rule_df = pd.read_csv(good_name)
         # make sure there wasn't a blank line introduced
         self.rule_df = self.rule_df.dropna()
