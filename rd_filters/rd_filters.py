@@ -158,6 +158,19 @@ class RDFilters:
                 return [smiles, name] + [desc + " > %d" % (max_val)] + desc_list
         return [smiles, name] + ["OK"] + desc_list
 
+    def filter(self, df):
+        """
+        Same as evaluate but using dataframe filters instead of custom datastructure
+        :param df: input dataframe containing just Mol column
+        :return: list of indexes for the dataframe that is filtered
+        """
+        def match_pattern(s):
+            for (pattern, tolerance, _) in self.rule_list:
+                if len(s.GetSubstructMatches(pattern)) > tolerance:
+                    return False
+                return True
+        return df.apply(match_pattern)
+
 
 def main():
     cmd_input = docopt(cmd_str)

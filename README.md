@@ -167,3 +167,32 @@ A new default rules template file can be generated using the **template** option
 As always please let me know if you have questions, comments, etc. 
 
 Pat Walters, August 2018
+
+#### Package Usage
+
+Programatic access to RDFilters:
+``` python
+from rd_filters import rd_filters
+rules = rd_filters.RDFilters()
+rules.get_alert_sets()
+
+rule_dict = {
+    "Rule_BMS": False,
+    "Rule_Dundee": False,
+    "Rule_Glaxo": False,
+    "Rule_Inpharmatica": True,
+    "Rule_LINT": False,
+    "Rule_MLSMR": False,
+    "Rule_PAINS": False,
+    "Rule_SureChEMBL": False,
+}
+rule_list= [x.replace("Rule_", "") for x in rule_dict.keys() if x.startswith("Rule") and rule_dict[x]]
+rules.build_rule_list(rule_list)
+
+"""
+input should have a column of Mols in the dataframe.
+"""
+input = output_mol_col_in_df_format
+
+input = input[rules.filter(input)]
+```
